@@ -16,7 +16,7 @@ The orginal framework of the recommendation system proposed in the paper.
 We recommend going through the slides [here](/slides/Project_final.pptx) first and then get started.
 
 ### Directory Structure
-![Directory structure](/Plots/dir_structure.png)
+![Directory structure](/Plots/dir-structure.jpg)
 ``Datasets/1m/ml-1m/`` contains *movies.dat*, *ratings.dat* and *users.dat* files
 
 ``Datasets/1m/ml-100k/`` contains *u.data*, *u.user, ...*  files
@@ -39,7 +39,7 @@ or\
 
 ## Results
 
-![Experiment Results](/Plots/results.png)
+![Experiment Results](/Plots/results.jpg)
 
 
 ~~~
