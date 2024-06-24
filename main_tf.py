@@ -2,6 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from sklearn.preprocessing import  MinMaxScaler
+import argparse
+import yaml
+import tensorflow as tf
+import os
+
 
 from src.MovieLensData import MovieLensData
 from src.GraphFeatures import GraphFeatures
@@ -9,13 +14,44 @@ from src.AutoEncoderModel_tf import AutoEncoderModel
 from src.RecommendationSystem import RecommendationSystem
 
 
+def setSeeds(seed = 0):
+    # Set seed
+    tf.random.set_seed(seed)
+    
+    # Set environment variable for TensorFlow (useful for certain operations)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    
+    # Ensure reproducibility for TensorFlow dataset operations
+    from tensorflow.python.framework import random_seed
+    random_seed.set_random_seed(seed)
+
+def arg_init():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', type=str, default='none', help='Path to the config file.')
+    return parser.parse_args()
+
+def getConfig(path):
+    configFile = yaml.load(open(path, 'r'), Loader=yaml.Loader)
+    return configFile
+
 if __name__ == '__main__':
+    # Set seeds for reproducibility
+    setSeeds(0)
+
+    # Parse arguments
+    userConfigPath = arg_init().config
+    if userConfigPath == None:
+        print("No configuration file specified")
+        exit(0)
+    config = getConfig(userConfigPath)
+
+
     # Load data
-    data_path_100k = 'Datasets/100k/ml-100k/'
-    data_path_1m = 'Datasets/1m/ml-1m/'
+    data_path_100k = config['DATASET']['DATA_PATH_100K']
+    data_path_1m = config['DATASET']['DATA_PATH_1M']
 
     # Choose the dataset - '100k' or '1m'
-    dataType = '100k'
+    dataType = config["EXPERIMENT"]["TYPE"]
 
 
 
@@ -68,7 +104,10 @@ if __name__ == '__main__':
 
     # Cluster users and evaluate the recommendation system
     print("Clustering users and evaluating the recommendation system...")
-    recommendation_system.cluster_users(encoded_features, n_clusters=8)
+    if config["CLUSTERING"]['METHOD'] == "k-means":
+        recommendation_system.cluster_users_kmeans(encoded_features, n_clusters=config["CLUSTERING"]["NUM_CLUSTERS"])
+    else:
+        recommendation_system.cluster_users_dbscan(encoded_features, eps=config["CLUSTERING"]["EPS"], min_samples=config["CLUSTERING"]["MIN_SAMPLES"])
 
     rmse = recommendation_system.evaluate(test_data)
     print(f'Root Mean Squared Error on Test Data: {rmse}')

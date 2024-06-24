@@ -4,6 +4,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.cluster import DBSCAN
 
 
 
@@ -15,12 +16,21 @@ class RecommendationSystem:
         self.df_ratings = train_data
         self.df_user = df_user
 
-    def cluster_users(self, encoded_features, n_clusters=3):
+    def cluster_users_kmeans(self, encoded_features, n_clusters=3):
         """
         Cluster users using k-means clustering on the encoded features.
         """
         kmeans = KMeans(n_clusters=n_clusters, random_state=42)
         clusters = kmeans.fit_predict(encoded_features)
+        self.df_user['Cluster'] = clusters
+        return clusters
+    
+    def cluster_users_dbscan(self, encoded_features, eps=0.5, min_samples=5):
+        """
+        Cluster users using DBSCAN clustering on the encoded features.
+        """
+        dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+        clusters = dbscan.fit_predict(encoded_features)
         self.df_user['Cluster'] = clusters
         return clusters
 

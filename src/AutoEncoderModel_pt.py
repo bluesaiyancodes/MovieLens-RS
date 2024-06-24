@@ -49,3 +49,6 @@ class AutoEncoder(nn.Module):
             l1_loss += torch.sum(torch.abs(param))
             l2_loss += torch.sum(param ** 2)
         return self.l1 * l1_loss + self.l2 * l2_loss
+    
+
+    

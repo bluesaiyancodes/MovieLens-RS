@@ -1,0 +1,18 @@
+DATASET:
+  DATA_PATH_100K: 'Datasets/100k/ml-100k/'
+  DATA_PATH_1M: 'Datasets/1m/ml-1m/'
+
+EXPERIMENT:
+  TYPE: '100k'   # '100k' or '1m'
+  BATCH_SIZE: 256
+  NUM_EPOCHS: 200
+  LOSS: 'mse'
+  OPTIMIZER: 'Adam'
+  LEARNING_RATE: 0.1
+  WEIGHT_DECAY: 0.5
+  
+CLUSTERING:
+  METHOD: "k-means"  # "k-means" or "dbscan"
+  NUM_CLUSTERS: 8
+  EPS: 0.4
+  MIN_SAMPLES: 15
